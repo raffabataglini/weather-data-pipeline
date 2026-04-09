@@ -9,24 +9,16 @@ def get_latest_file():
     return f"data/raw/{latest_file}"
 
 
-def transform_data():
-    file_path = get_latest_file()
-
+def transform_data(file_path):
     with open(file_path, "r") as f:
         data = json.load(f)
 
-    # extrair dados relevantes
-    times = data["hourly"]["time"]
-    temperatures = data["hourly"]["temperature_2m"]
-
     df = pd.DataFrame({
-        "datetime": times,
-        "temperature": temperatures
-    })
-
-    # conversão de tipo
+    "city": data["city"],
+    "datetime": data["hourly"]["time"],
+    "temperature": data["hourly"]["temperature_2m"]
+})
     df["datetime"] = pd.to_datetime(df["datetime"])
-
     return df
 
 

@@ -1,62 +1,73 @@
-Weather Data Pipeline 🌦️
-This is an ETL (Extract, Transform, Load) data pipeline developed in Python. The project automates the collection of weather data from a public API, processes the information using Pandas, and stores the results both locally and in the cloud (AWS S3).
+Multi-City Weather Data Pipeline 🌦️
+This is an automated ETL (Extract, Transform, Load) pipeline built with Python. The project has been scaled to monitor weather conditions across multiple cities in the Paraíba Valley and Alto Tietê regions (Guararema, Mogi das Cruzes, Jacareí, and São José dos Campos).
 
 🚀 Project Architecture
-The pipeline follows a traditional data engineering workflow:
+The pipeline follows a modular data engineering workflow:
 
-Extract: Retrieves hourly temperature data from the Open-Meteo API for specific geographic coordinates.
+Extract: Dynamically fetches hourly temperature data for multiple coordinates using the Open-Meteo API.
 
-Transform: Cleans and structures the raw JSON data into a tabular format (DataFrames) using Pandas, including datetime conversion.
+Transform: Processes the raw JSON response for each city using Pandas, structuring it into a unified tabular format with proper timestamp conversions.
 
 Load:
 
-Local: Saves the processed data as a CSV file in the data/processed directory.
+Local: Stores individual city data and a consolidated master file in CSV format.
 
-Cloud: Uploads the raw JSON files to an Amazon S3 bucket to maintain a Data Lake structure.
+Cloud: Syncs the raw data to an Amazon S3 bucket, maintaining a versioned Data Lake structure.
+
+📍 Monitored Locations
+The pipeline currently tracks:
+
+Guararema, SP
+
+Mogi das Cruzes, SP
+
+Jacareí, SP
+
+São José dos Campos, SP
 
 📁 Project Structure
-src/: Contains the core pipeline modules (extract.py, transform.py, load.py).
+src/extract.py: Handles API requests and saves raw JSON files with city-specific tags.
 
-data/: Local storage divided into raw and processed layers (ignored by git).
+src/transform.py: Cleans data and generates DataFrames.
 
-main.py: The orchestrator script that executes the entire pipeline in sequence.
+src/load.py: Manages the integration with AWS S3 using boto3.
 
-requirements.txt: List of all Python dependencies required to run the project.
+main.py: The orchestrator that iterates through the city list and runs the full pipeline.
 
 🛠️ Technologies Used
-Language: Python 3.x.
+Python 3.x
 
-Libraries:
+Pandas: For data manipulation and transformation.
 
-Pandas: Data manipulation and analysis.
+Boto3: AWS SDK for Python (S3 integration).
 
-Requests: For consuming the external API.
+Requests: For API consumption.
 
-Boto3: AWS SDK for Python to interact with S3.
-
-Python-dotenv: Management of environment variables and credentials.
+Python-dotenv: Secure management of environment variables.
 
 ⚙️ Setup and Execution
 Prerequisites
-Python installed on your machine.
+Python installed.
 
-AWS credentials configured locally (typically in ~/.aws/credentials).
+AWS credentials configured in ~/.aws/credentials.
 
 Installation
 Clone the repository.
 
-Install the necessary dependencies:
+Install dependencies:
 
 Bash
 pip install -r requirements.txt
-Running the Pipeline
-To execute the full automated workflow, run:
+Running
+To process data for all cities:
 
 Bash
 python main.py
-📝 Technical Details
-Data Versioning: Files in the data/raw folder are saved with a unique timestamp (YYYYMMDD_HHMMSS) to prevent overwriting historical data.
+📝 Technical Features
+Dynamic File Naming: Files are saved as weather_city_timestamp.json to ensure data traceability.
 
-Security: The .gitignore file is configured to ensure that virtual environments (venv/), sensitive configuration files (.env, .aws/), and local logs are not exposed on GitHub.
+Data Lake Best Practices: Raw data is preserved in its original format before transformation.
 
-This project was developed as part of my Data Engineering studies.
+Scalability: The modular design allows adding new cities simply by updating the coordinate dictionary in the code.
+
+Project developed as part of my Data Engineering internship preparation.
